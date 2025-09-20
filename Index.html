@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>স্টেপ ক্যালকুলেটর</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding-top: 100px;
+    color: #f5f5f5;
+  }
+
+  .header {
+    position: fixed;
+    top:0; left:0; width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    padding: 12px 20px;
+    z-index:1000;
+    box-shadow:0 3px 15px rgba(0,0,0,0.6);
+  }
+  .header img {
+    height:50px;
+    width:50px;
+    border-radius:50%;
+    margin-right:15px;
+    box-shadow:0 0 15px rgba(255,215,0,0.8);
+  }
+  .team-name {
+    font-size:1.3rem;
+    font-weight:700;
+    color:#FFD700;
+    text-shadow:0 0 10px #FFD700,0 0 20px #FFA500;
+  }
+
+  .container {
+    width:95%;
+    max-width:400px;
+    padding:25px;
+    border-radius:20px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    animation: fadeIn 0.8s ease-in-out;
+  }
+
+  h1 { text-align:center; font-size:1.8rem; margin-bottom:8px; color:#00c6ff; }
+  .subtitle { text-align:center; color:#ddd; margin-bottom:20px; font-size:0.95rem; }
+
+  label { display:block; margin-bottom:6px; font-weight:600; color:#fff; }
+  input[type="number"] {
+    width:100%; padding:16px; margin-bottom:18px;
+    border-radius:12px; border:none; outline:none;
+    font-size:16px; background: rgba(255,255,255,0.15);
+    color:#fff; transition:0.3s;
+  }
+  input[type="number"]::placeholder { color: rgba(255,255,255,0.6); }
+  input[type="number"]:focus { background: rgba(255,255,255,0.25); box-shadow:0 0 10px #00c6ff; }
+
+  button {
+    width:100%; padding:16px; border:none; border-radius:15px;
+    background: linear-gradient(135deg,#00c6ff,#0072ff);
+    color:#fff; font-size:18px; font-weight:700; cursor:pointer;
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
+  button:hover { transform:translateY(-2px); box-shadow:0 5px 20px rgba(0,198,255,0.6); }
+
+  table {
+    width:100%; border-collapse: collapse; margin-top:20px;
+    border-radius:12px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.3);
+  }
+  th,td { padding:14px; text-align:center; }
+  th { background: rgba(0,198,255,0.3); color:#fff; font-weight:600; }
+  td { border-top:1px solid rgba(255,255,255,0.15); color:#f5f5f5; }
+  tfoot td { font-weight:700; background: rgba(0,198,255,0.2); color:#FFD700; }
+
+  .telegram-btn {
+    display:block; margin:20px auto 0; padding:14px 25px;
+    background:#0088cc; color:#fff; font-weight:700;
+    border-radius:15px; text-decoration:none; font-size:17px;
+    text-align:center; transition:0.3s;
+  }
+  .telegram-btn:hover { background:#00aaff; }
+
+  @keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+  @media(max-width:480px){ h1{font-size:1.5rem;} .team-name{font-size:1.2rem;} input,button{font-size:16px;padding:14px;} }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="" alt="Logo">
+  <div class="team-name">Dk Win Bangladesh Step Maker</div>
+</div>
+
+<div class="container">
+  <h1>স্টেপ ক্যালকুলেটর</h1>
+  <p class="subtitle">আপনার ইনভেস্টমেন্ট কে ছোট ছোট স্টেপে ভাগ করে ক্যালকুলেট করুন।</p>
+
+  <form id="calcForm">
+    <label for="amount">মোট টাকা</label>
+    <input type="number" id="amount" placeholder="যেমনঃ 1000" required>
+    
+    <label for="steps">স্টেপ সংখ্যা</label>
+    <input type="number" id="steps" placeholder="যেমনঃ 7" required>
+    
+    <button type="submit">ক্যালকুলেট করুন</button>
+  </form>
+
+  <div id="results"></div>
+
+  <a href="https://t.me/+rZtv-nBEJ0ZkZDM1" target="_blank" class="telegram-btn">আমাদের Telegram চ্যানেল জয়েন করুন</a>
+</div>
+
+<script>
+document.getElementById("calcForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const amount = parseFloat(document.getElementById("amount").value);
+  const steps = parseInt(document.getElementById("steps").value);
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "";
+
+  if(isNaN(amount) || isNaN(steps) || steps <= 0){
+    resultsDiv.innerHTML = "<p style='color:#ff6666;text-align:center;'>⚠️ সঠিক ইনপুট দিন</p>";
+    return;
+  }
+
+  const denominator = Math.pow(2, steps) - 1;
+  const x = amount / denominator;
+
+  let table = "<table><thead><tr><th>স্টেপ</th><th>টাকার পরিমাণ</th></tr></thead><tbody>";
+  let total = 0;
+  for(let i=0;i<steps;i++){
+    let value = x * Math.pow(2,i);
+    total += value;
+    table += `<tr><td>${i+1}</td><td>${value.toFixed(2)}</td></tr>`;
+  }
+  table += `<tfoot><tr><td>মোট</td><td>${total.toFixed(2)}</td></tr></tfoot></tbody></table>`;
+  resultsDiv.innerHTML = table;
+});
+</script>
+
+</body>
+</html>
